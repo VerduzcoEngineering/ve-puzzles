@@ -1,0 +1,21 @@
+{
+  "id": "VE-PUZ-0001",
+  "kind": "code",
+  "lang": "c",
+  "topic": ["embedded", "integer-overflow", "loops"],
+  "difficulty": "intro",
+  "prompt": "This loop should visit every byte value 0–255 once, then stop. On hardware it never exits. Why?",
+  "snippet": "for (uint8_t i = 0; i <= 255; i++) {\n    process(i);\n}",
+  "choices": [
+    "process() modifies i somewhere by reference",
+    "uint8_t wraps to 0 after 255, so i <= 255 is always true",
+    "uint8_t cannot store the value 255",
+    "The compiler optimizes the loop away"
+  ],
+  "answerIndex": 1,
+  "reveal": "A uint8_t holds 0–255. After i = 255, i++ wraps back to 0 — the condition i <= 255 can never be false, so the loop runs forever.",
+  "lesson": "Make the loop counter wider than the range it counts (here uint16_t), or restructure the exit test. Off-by-one and overflow bugs hide in the variable type, not just the comparison.",
+  "hasBreakdown": false,
+  "caption": "Looks fine. Runs forever. Spot why 👇",
+  "hashtags": ["embedded", "firmware", "C"]
+}

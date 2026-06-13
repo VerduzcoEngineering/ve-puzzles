@@ -1,0 +1,20 @@
+{
+  "id": "VE-PUZ-0003",
+  "kind": "schematic",
+  "topic": ["i2c", "pull-ups", "open-drain"],
+  "difficulty": "journeyman",
+  "prompt": "An I²C sensor works on the bench jig but returns nothing on the new board. The only schematic change: two resistors were removed. Why does the bus fail?",
+  "snippet": "3V3 ─────────────── SDA ── MCU\n                    SCL ── MCU\n\n  [SENSOR] on SDA/SCL — no resistors to 3V3",
+  "choices": [
+    "I²C lines need pull-up resistors to idle high",
+    "SDA and SCL are swapped",
+    "The sensor is missing a decoupling capacitor",
+    "The MCU pins must be configured push-pull"
+  ],
+  "answerIndex": 0,
+  "reveal": "I²C is open-drain: devices can only pull the line low, never drive it high. Without pull-ups to Vcc the lines never return high, so there are no valid logic levels and the bus is stuck.",
+  "lesson": "Open-drain buses (I²C, 1-Wire, SMBus) require pull-ups to set the high state. ~4.7 kΩ to Vcc is the common default; go lower for fast-mode or long/capacitive traces, higher to save power.",
+  "hasBreakdown": false,
+  "caption": "Works on the jig, dead on the board. Two missing parts.",
+  "hashtags": ["embedded", "I2C", "hardware"]
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "VE-PUZ-0001",
+    "kind": "code",
+    "lang": "c",
+    "topic": [
+      "embedded",
+      "integer-overflow",
+      "loops"
+    ],
+    "difficulty": "intro",
+    "prompt": "This loop should visit every byte value 0–255 once, then stop. On hardware it never exits. Why?",
+    "snippet": "for (uint8_t i = 0; i <= 255; i++) {\n    process(i);\n}",
+    "choices": [
+      "process() modifies i somewhere by reference",
+      "uint8_t wraps to 0 after 255, so i <= 255 is always true",
+      "uint8_t cannot store the value 255",
+      "The compiler optimizes the loop away"
+    ],
+    "answerIndex": 1,
+    "reveal": "A uint8_t holds 0–255. After i = 255, i++ wraps back to 0 — the condition i <= 255 can never be false, so the loop runs forever.",
+    "lesson": "Make the loop counter wider than the range it counts (here uint16_t), or restructure the exit test. Off-by-one and overflow bugs hide in the variable type, not just the comparison.",
+    "hasBreakdown": false,
+    "caption": "Looks fine. Runs forever. Spot why 👇",
+    "hashtags": [
+      "embedded",
+      "firmware",
+      "C"
+    ]
+  },
+  {
+    "id": "VE-PUZ-0002",
+    "kind": "schematic",
+    "topic": [
+      "leds",
+      "current-limiting",
+      "fundamentals"
+    ],
+    "difficulty": "intro",
+    "prompt": "An indicator LED is driven straight from a 5 V GPIO pin. It flashes bright, then goes dark for good. What is missing?",
+    "snippet": "5V GPIO ───▶|─── GND\n            (LED)\n\n   no series resistor in the path",
+    "choices": [
+      "The LED is installed backwards",
+      "A current-limiting series resistor",
+      "The GPIO cannot source enough current",
+      "A flyback diode across the LED"
+    ],
+    "answerIndex": 1,
+    "reveal": "With no series resistor, nothing limits the current except the LED and source impedance — well past the LED rating. It overheats and fails (often after one bright flash).",
+    "lesson": "Every LED on a voltage source needs current limiting. Red LED (Vf ≈ 2 V) at 10 mA on 5 V: R = (5 − 2) / 0.01 = 300 Ω → use 330 Ω (E12).",
+    "hasBreakdown": false,
+    "caption": "One bright flash, then dead. The fix is one part.",
+    "hashtags": [
+      "electronics",
+      "hardware",
+      "LED"
+    ]
+  },
+  {
+    "id": "VE-PUZ-0003",
+    "kind": "schematic",
+    "topic": [
+      "i2c",
+      "pull-ups",
+      "open-drain"
+    ],
+    "difficulty": "journeyman",
+    "prompt": "An I²C sensor works on the bench jig but returns nothing on the new board. The only schematic change: two resistors were removed. Why does the bus fail?",
+    "snippet": "3V3 ─────────────── SDA ── MCU\n                    SCL ── MCU\n\n  [SENSOR] on SDA/SCL — no resistors to 3V3",
+    "choices": [
+      "I²C lines need pull-up resistors to idle high",
+      "SDA and SCL are swapped",
+      "The sensor is missing a decoupling capacitor",
+      "The MCU pins must be configured push-pull"
+    ],
+    "answerIndex": 0,
+    "reveal": "I²C is open-drain: devices can only pull the line low, never drive it high. Without pull-ups to Vcc the lines never return high, so there are no valid logic levels and the bus is stuck.",
+    "lesson": "Open-drain buses (I²C, 1-Wire, SMBus) require pull-ups to set the high state. ~4.7 kΩ to Vcc is the common default; go lower for fast-mode or long/capacitive traces, higher to save power.",
+    "hasBreakdown": false,
+    "caption": "Works on the jig, dead on the board. Two missing parts.",
+    "hashtags": [
+      "embedded",
+      "I2C",
+      "hardware"
+    ]
+  }
+]
