@@ -48,7 +48,7 @@
     "answerIndex": 1,
     "reveal": "With no series resistor, nothing limits the current except the LED and source impedance — well past the LED rating. It overheats and fails (often after one bright flash).",
     "lesson": "Every LED on a voltage source needs current limiting. Red LED (Vf ≈ 2 V) at 10 mA on 5 V: R = (5 − 2) / 0.01 = 300 Ω → use 330 Ω (E12).",
-    "hasBreakdown": false,
+    "hasBreakdown": true,
     "caption": "One bright flash, then dead. The fix is one part.",
     "hashtags": [
       "electronics",

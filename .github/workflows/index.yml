@@ -1,0 +1,37 @@
+name: Build index
+
+# Regenerate index.json whenever a puzzle card changes, so the manifest the
+# website consumes never drifts from puzzles/*.json. The path filter is
+# puzzles/** only, so the bot's own commit to the root index.json does not
+# retrigger this workflow.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'puzzles/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/build-index.mjs
+      - name: Commit index.json if it changed
+        run: |
+          if ! git diff --quiet -- index.json; then
+            git config user.name "ve-puzzles-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add index.json
+            git commit -m "chore: regenerate index.json"
+            git push
+          else
+            echo "index.json already up to date"
+          fi
